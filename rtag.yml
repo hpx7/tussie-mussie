@@ -1,0 +1,61 @@
+types:
+  Username: string
+  CardName: string
+  Color:
+    - RED
+    - WHITE
+    - PINK
+    - PURPLE
+    - YELLOW
+  GameStatus:
+    - LOBBY
+    - PLAYER_TURNS
+    - BEFORE_SCORING
+    - ROUND_RECAP
+    - GAME_OVER
+  CardDetails:
+    name: CardName
+    color: Color
+    numHearts: number
+    ruleText: string
+  Card:
+    id: number
+    details?: CardDetails
+  HandCard:
+    card: Card
+    isKeepsake: boolean
+  PlayerInfo:
+    name: Username
+    score: number
+    hand: HandCard[]
+    drawnCards: Card[]
+  Offer:
+    faceupCard: Card
+    facedownCard: Card
+  PlayerState:
+    round: number
+    turn: Username
+    status: GameStatus
+    offer?: Offer
+    players: PlayerInfo[]
+
+methods:
+  createGame:
+  joinGame:
+  startGame:
+  drawForOffer:
+  makeOffer:
+    faceupCard: CardName
+  selectOffer:
+    faceup: boolean
+  selectBeforeScoringAction:
+    card: CardName
+  advanceRound:
+
+auth:
+  anonymous:
+    separator: "-"
+
+userState: PlayerState
+initialize: createGame
+error: string
