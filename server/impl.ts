@@ -148,15 +148,57 @@ function createDeck(ctx: Context) {
     }),
     createCard(ctx, {
       name: "RED_ROSE",
+      color: Color.RED,
+      numHearts: 0,
+      ruleText: "+1 point for each of your hearts",
+    }),
+    createCard(ctx, {
+      name: "RED_TULIP",
+      color: Color.RED,
+      numHearts: 0,
+      ruleText: "+1 point for each of your red cards, including this one",
+    }),
+    createCard(ctx, {
+      name: "AMARYLLIS",
+      color: Color.RED,
+      numHearts: 0,
+      ruleText: "+1 point for each card in your bouquet",
+    }),
+    createCard(ctx, {
+      name: "GARDENIA",
+      color: Color.WHITE,
+      numHearts: 0,
+      ruleText: "+1 point for each of your keepsakes",
+    }),
+    createCard(ctx, {
+      name: "DAISY",
+      color: Color.WHITE,
+      numHearts: 0,
+      ruleText: "+1 point for each of your other cards without a heart",
+    }),
+    createCard(ctx, {
+      name: "ORCHID",
+      color: Color.WHITE,
+      numHearts: 0,
+      ruleText: "This card counts as any of one color",
+    }),
+    createCard(ctx, {
+      name: "PEONY",
+      color: Color.PINK,
+      numHearts: 1,
+      ruleText: "+2 points if you have exactly two cards in your bouquet",
+    }),
+    createCard(ctx, {
+      name: "PHLOX",
       color: Color.PINK,
       numHearts: 2,
       ruleText: "No effect",
     }),
     createCard(ctx, {
-      name: "HYACINTH",
-      color: Color.PURPLE,
+      name: "PINK_ROSE",
+      color: Color.PINK,
       numHearts: 0,
-      ruleText: "+3 points if you have no hearts",
+      ruleText: "+1 point for each of your pink cards, including this one",
     }),
   ];
   return shuffle(ctx.randInt, cards);
