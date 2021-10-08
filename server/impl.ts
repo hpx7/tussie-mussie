@@ -147,7 +147,7 @@ function createDeck(ctx: Context) {
       ruleText: "No effect",
     }),
     createCard(ctx, {
-      name: "PHLOX",
+      name: "RED_ROSE",
       color: Color.PINK,
       numHearts: 2,
       ruleText: "No effect",
@@ -157,36 +157,6 @@ function createDeck(ctx: Context) {
       color: Color.PURPLE,
       numHearts: 0,
       ruleText: "+3 points if you have no hearts",
-    }),
-    createCard(ctx, {
-      name: "CAMELLIA",
-      color: Color.RED,
-      numHearts: 1,
-      ruleText: "No effect",
-    }),
-    createCard(ctx, {
-      name: "PHLOX",
-      color: Color.PINK,
-      numHearts: 2,
-      ruleText: "No effect",
-    }),
-    createCard(ctx, {
-      name: "HYACINTH",
-      color: Color.PURPLE,
-      numHearts: 0,
-      ruleText: "+3 points if you have no hearts",
-    }),
-    createCard(ctx, {
-      name: "CAMELLIA",
-      color: Color.RED,
-      numHearts: 1,
-      ruleText: "No effect",
-    }),
-    createCard(ctx, {
-      name: "CAMELLIA",
-      color: Color.RED,
-      numHearts: 1,
-      ruleText: "No effect",
     }),
   ];
   return shuffle(ctx.randInt, cards);
