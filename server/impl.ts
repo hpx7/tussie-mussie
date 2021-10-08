@@ -1,17 +1,22 @@
-import {Context, Methods} from "./.rtag/methods";
-import {Response, UserData} from "./.rtag/base";
+import { Context, Methods } from "./.rtag/methods";
+import { AnonymousUserData, Response, UserData } from "./.rtag/base";
 import {
   Card,
   CardDetails,
   Color,
-  GameStatus, HandCard,
+  GameStatus,
+  HandCard,
   IAdvanceRoundRequest,
   ICreateGameRequest,
   IDrawForOfferRequest,
   IJoinGameRequest,
   IMakeOfferRequest,
-  ISelectBeforeScoringActionRequest,
+  IMarigoldActionRequest,
+  IMoveToScoreRequest,
+  IPinkLarkspurActionRequest,
+  ISelectBeforeScoringCardRequest,
   ISelectOfferRequest,
+  ISnapdragonActionRequest,
   IStartGameRequest,
   Offer,
   PlayerInfo,
@@ -69,7 +74,7 @@ export class Impl implements Methods<InternalState> {
       return Response.error("Not your turn");
     }
     const player = state.players.find((p) => p.name === user.name)!;
-    if (player.drawnCards.find(card => card.details!.name === request.faceupCard) !== undefined) {
+    if (player.drawnCards.find((card) => card.details!.name === request.faceupCard) === undefined) {
       return Response.error("Card not valid");
     }
     const faceupCard = player.drawnCards.find((card) => card.details!.name === request.faceupCard)!;
@@ -83,7 +88,7 @@ export class Impl implements Methods<InternalState> {
       return Response.error("Offer not made");
     }
     const turnIdx = state.players.findIndex((p) => p.name === state.turn)!;
-    const chooser = state.players[(turnIdx + 1)% state.players.length];
+    const chooser = state.players[(turnIdx + 1) % state.players.length];
     if (chooser.name !== user.name) {
       return Response.error("Not your turn");
     }
@@ -100,29 +105,55 @@ export class Impl implements Methods<InternalState> {
 
     if (getGameStatus(state) === GameStatus.PLAYER_TURNS) {
       state.turn = state.players[(turnIdx + 1) % state.players.length].name;
-    }
-    else {
+    } else {
       processRecap(state);
     }
     return Response.ok();
   }
-  selectBeforeScoringAction(
+  selectBeforeScoringCard(
     state: InternalState,
     user: UserData,
     ctx: Context,
-    request: ISelectBeforeScoringActionRequest
+    request: ISelectBeforeScoringCardRequest
   ): Response {
     return Response.error("Not implemented");
+  }
+  pinkLarkspurAction(
+    state: InternalState,
+    user: AnonymousUserData,
+    ctx: Context,
+    request: IPinkLarkspurActionRequest
+  ): Response {
+    throw new Error("Method not implemented.");
+  }
+  snapdragonAction(
+    state: InternalState,
+    user: AnonymousUserData,
+    ctx: Context,
+    request: ISnapdragonActionRequest
+  ): Response {
+    throw new Error("Method not implemented.");
+  }
+  marigoldAction(
+    state: InternalState,
+    user: AnonymousUserData,
+    ctx: Context,
+    request: IMarigoldActionRequest
+  ): Response {
+    throw new Error("Method not implemented.");
+  }
+  moveToScore(state: InternalState, user: AnonymousUserData, ctx: Context, request: IMoveToScoreRequest): Response {
+    throw new Error("Method not implemented.");
   }
   advanceRound(state: InternalState, user: UserData, ctx: Context, request: IAdvanceRoundRequest): Response {
     state.round++;
     state.deck = createDeck(ctx);
     const turnIdx = state.players.findIndex((p) => p.name === state.turn)!;
     state.turn = state.players[(turnIdx + 1) % state.players.length].name;
-    state.players.forEach(p => {
+    state.players.forEach((p) => {
       p.drawnCards = [];
       p.hand = [];
-    })
+    });
     return Response.ok();
   }
   getUserState(state: InternalState, user: UserData): PlayerState {
@@ -154,8 +185,8 @@ export class Impl implements Methods<InternalState> {
 }
 
 function processRecap(state: InternalState) {
-  state.players.forEach(p => {
-    p.hand.forEach(handCard => {
+  state.players.forEach((p) => {
+    p.hand.forEach((handCard) => {
       let score = scoreForCard(handCard, p.hand);
       p.score += score;
     });
@@ -164,45 +195,40 @@ function processRecap(state: InternalState) {
 
 function scoreForCard(handCard: HandCard, hand: HandCard[]) {
   let score = 0;
-  let card = handCard.card
+  let card = handCard.card;
   // hearts
   score += card.details!.numHearts!;
 
   // custom rules
-  if (card.details!.name === 'RED_ROSE') {
-    hand.forEach(hc => score += hc.card.details!.numHearts);
-  }
-  else if (card.details!.name === 'RED_TULIP') {
-    hand.forEach(hc => {
-      if (hc.card.details!.color === Color.RED || hc.card.details!.name === 'ORCHID') {
+  if (card.details!.name === "RED_ROSE") {
+    hand.forEach((hc) => (score += hc.card.details!.numHearts));
+  } else if (card.details!.name === "RED_TULIP") {
+    hand.forEach((hc) => {
+      if (hc.card.details!.color === Color.RED || hc.card.details!.name === "ORCHID") {
         score += 1;
       }
     });
-  }
-  else if (card.details!.name === 'AMARYLLIS') {
-    hand.forEach(hc => {
+  } else if (card.details!.name === "AMARYLLIS") {
+    hand.forEach((hc) => {
       if (!hc.isKeepsake) {
         score += 1;
       }
     });
-  }
-  else if (card.details!.name === 'GARDENIA') {
-    hand.forEach(hc => {
+  } else if (card.details!.name === "GARDENIA") {
+    hand.forEach((hc) => {
       if (hc.isKeepsake) {
         score += 1;
       }
     });
-  }
-  else if (card.details!.name === 'DAISY') {
-    hand.forEach(hc => {
-      if (hc.card.details!.numHearts === 0 && card.details!.name !== 'DAISY') {
+  } else if (card.details!.name === "DAISY") {
+    hand.forEach((hc) => {
+      if (hc.card.details!.numHearts === 0 && card.details!.name !== "DAISY") {
         score += 1;
       }
     });
-  }
-  else if (card.details!.name === 'PEONY') {
-    let bcount = 0
-    hand.forEach(hc => {
+  } else if (card.details!.name === "PEONY") {
+    let bcount = 0;
+    hand.forEach((hc) => {
       if (!hc.isKeepsake) {
         bcount += 1;
       }
@@ -210,46 +236,41 @@ function scoreForCard(handCard: HandCard, hand: HandCard[]) {
     if (bcount === 2) {
       score += 2;
     }
-  }
-  else if (card.details!.name === 'PINK_ROSE') {
-    hand.forEach(hc => {
-      if (hc.card.details!.color === Color.PINK || hc.card.details!.name === 'ORCHID') {
+  } else if (card.details!.name === "PINK_ROSE") {
+    hand.forEach((hc) => {
+      if (hc.card.details!.color === Color.PINK || hc.card.details!.name === "ORCHID") {
         score += 1;
       }
     });
-  }
-  else if (card.details!.name === 'FORGET_ME_NOT') {
-    let thisIdx = hand.findIndex(hc => hc.card.details!.name === card.details!.name);
+  } else if (card.details!.name === "FORGET_ME_NOT") {
+    let thisIdx = hand.findIndex((hc) => hc.card.details!.name === card.details!.name);
     if (thisIdx > 0) {
       score += hand[thisIdx - 1].card.details!.numHearts;
     }
-    if (thisIdx < hand.length-1) {
+    if (thisIdx < hand.length - 1) {
       score += hand[thisIdx + 1].card.details!.numHearts;
     }
-  }
-  else if (card.details!.name === 'HYACINTH') {
-    if (hand.every(hc => hc.card.details!.numHearts === 0)) {
+  } else if (card.details!.name === "HYACINTH") {
+    if (hand.every((hc) => hc.card.details!.numHearts === 0)) {
       score += 3;
     }
-  }
-  else if (card.details!.name === 'VIOLET') {
-    hand.forEach(hc => {
-      if (hc.card.details!.color === Color.PURPLE || hc.card.details!.name === 'ORCHID') {
+  } else if (card.details!.name === "VIOLET") {
+    hand.forEach((hc) => {
+      if (hc.card.details!.color === Color.PURPLE || hc.card.details!.name === "ORCHID") {
         score += 1;
       }
     });
-  }
-  else if (card.details!.name === 'CARNATION') {
+  } else if (card.details!.name === "CARNATION") {
     let colors = new Set<Color>();
     let whiteCount = 0;
     let hasOrchid = false;
     let bonusPoints = 0;
-    hand.forEach(hc => {
+    hand.forEach((hc) => {
       colors.add(hc.card.details!.color);
       if (hc.card.details!.color === Color.WHITE) {
         whiteCount++;
       }
-      if (hc.card.details!.name === 'ORCHID') {
+      if (hc.card.details!.name === "ORCHID") {
         hasOrchid = true;
       }
     });
@@ -340,7 +361,8 @@ function createDeck(ctx: Context) {
       name: "PINK_LARKSPUR",
       color: Color.PINK,
       numHearts: 0,
-      ruleText: "Before scoring, you may draw two cards. If you do, you must replace one of your cards with one of them",
+      ruleText:
+        "Before scoring, you may draw two cards. If you do, you must replace one of your cards with one of them",
     }),
     createCard(ctx, {
       name: "FORGET_ME_NOT",
@@ -358,7 +380,8 @@ function createDeck(ctx: Context) {
       name: "SNAPDRAGON",
       color: Color.PURPLE,
       numHearts: 1,
-      ruleText: "Before scoring, you may change up to 2 of your cards, each from bouquet to keepsakes or keepsakes to bouquet",
+      ruleText:
+        "Before scoring, you may change up to 2 of your cards, each from bouquet to keepsakes or keepsakes to bouquet",
     }),
     createCard(ctx, {
       name: "HONEYSUCKLE",

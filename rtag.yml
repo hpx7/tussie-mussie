@@ -48,8 +48,16 @@ methods:
     faceupCard: CardName
   selectOffer:
     faceup: boolean
-  selectBeforeScoringAction:
+  selectBeforeScoringCard:
     card: CardName
+  pinkLarkspurAction:
+    cardToPick: CardName
+    cardToReplace: CardName
+  snapdragonAction:
+    cardsToSwitch: CardName[]
+  marigoldAction:
+    cardToDiscard: CardName
+  moveToScore:
   advanceRound:
 
 auth:
