@@ -197,7 +197,7 @@ function scoreForCard(handCard: HandCard, hand: HandCard[]) {
   let score = 0;
   let card = handCard.card;
   // hearts
-  score += card.details!.numHearts!;
+  score += card.details!.numHearts;
 
   // custom rules
   if (card.details!.name === "RED_ROSE") {
@@ -222,7 +222,7 @@ function scoreForCard(handCard: HandCard, hand: HandCard[]) {
     });
   } else if (card.details!.name === "DAISY") {
     hand.forEach((hc) => {
-      if (hc.card.details!.numHearts === 0 && card.details!.name !== "DAISY") {
+      if (hc.card.details!.numHearts === 0 && hc.card.details!.name !== "DAISY") {
         score += 1;
       }
     });
