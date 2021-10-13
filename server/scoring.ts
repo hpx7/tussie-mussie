@@ -2,7 +2,7 @@ import { HandCard, Color } from "./.rtag/types";
 
 export function scoreForCard(handCard: HandCard, hand: HandCard[]) {
   let score = 0;
-  let card = handCard.card;
+  const card = handCard.card;
   // hearts
   score += card.details!.numHearts;
 
@@ -50,7 +50,7 @@ export function scoreForCard(handCard: HandCard, hand: HandCard[]) {
       }
     });
   } else if (card.details!.name === "FORGET_ME_NOT") {
-    let thisIdx = hand.findIndex((hc) => hc.card.details!.name === card.details!.name);
+    const thisIdx = hand.findIndex((hc) => hc.card.details!.name === card.details!.name);
     if (thisIdx > 0) {
       score += hand[thisIdx - 1].card.details!.numHearts;
     }
@@ -67,8 +67,16 @@ export function scoreForCard(handCard: HandCard, hand: HandCard[]) {
         score += 1;
       }
     });
+  } else if (card.details!.name === "HONEYSUCKLE") {
+    const thisIdx = hand.findIndex((hc) => hc.card.details!.name === card.details!.name);
+    if (hand.map((hc) => hc.isKeepsake).indexOf(false) < thisIdx) {
+      score += 1;
+    }
+    if (hand.map((hc) => hc.isKeepsake).lastIndexOf(false) > thisIdx) {
+      score += 1;
+    }
   } else if (card.details!.name === "CARNATION") {
-    let colors = new Set<Color>();
+    const colors = new Set<Color>();
     let whiteCount = 0;
     let hasOrchid = false;
     let bonusPoints = 0;
