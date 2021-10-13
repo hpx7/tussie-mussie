@@ -1,5 +1,5 @@
 import { Context, Methods } from "./.rtag/methods";
-import { AnonymousUserData, Response, UserData } from "./.rtag/base";
+import { Response, UserData } from "./.rtag/base";
 import {
   Card,
   GameStatus,
@@ -8,12 +8,7 @@ import {
   IDrawForOfferRequest,
   IJoinGameRequest,
   IMakeOfferRequest,
-  IMarigoldActionRequest,
-  IMoveToScoreRequest,
-  IPinkLarkspurActionRequest,
-  ISelectBeforeScoringCardRequest,
   ISelectOfferRequest,
-  ISnapdragonActionRequest,
   IStartGameRequest,
   Offer,
   PlayerInfo,
@@ -113,41 +108,6 @@ export class Impl implements Methods<InternalState> {
     }
     return Response.ok();
   }
-  selectBeforeScoringCard(
-    state: InternalState,
-    user: UserData,
-    ctx: Context,
-    request: ISelectBeforeScoringCardRequest
-  ): Response {
-    return Response.error("Not implemented");
-  }
-  pinkLarkspurAction(
-    state: InternalState,
-    user: AnonymousUserData,
-    ctx: Context,
-    request: IPinkLarkspurActionRequest
-  ): Response {
-    throw new Error("Method not implemented.");
-  }
-  snapdragonAction(
-    state: InternalState,
-    user: AnonymousUserData,
-    ctx: Context,
-    request: ISnapdragonActionRequest
-  ): Response {
-    throw new Error("Method not implemented.");
-  }
-  marigoldAction(
-    state: InternalState,
-    user: AnonymousUserData,
-    ctx: Context,
-    request: IMarigoldActionRequest
-  ): Response {
-    throw new Error("Method not implemented.");
-  }
-  moveToScore(state: InternalState, user: AnonymousUserData, ctx: Context, request: IMoveToScoreRequest): Response {
-    throw new Error("Method not implemented.");
-  }
   advanceRound(state: InternalState, user: UserData, ctx: Context, request: IAdvanceRoundRequest): Response {
     state.round++;
     state.deck = createDeck(ctx);
@@ -191,7 +151,7 @@ function getGameStatus(state: InternalState): GameStatus {
     return GameStatus.GAME_OVER;
   }
   if (state.players.every((p) => p.hand.length === 4)) {
-    return GameStatus.ROUND_RECAP; //TODO
+    return GameStatus.ROUND_RECAP;
   }
   return GameStatus.PLAYER_TURNS;
 }

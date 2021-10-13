@@ -10,7 +10,6 @@ types:
   GameStatus:
     - LOBBY
     - PLAYER_TURNS
-    - BEFORE_SCORING
     - ROUND_RECAP
     - GAME_OVER
   CardDetails:
@@ -48,16 +47,6 @@ methods:
     faceupCard: CardName
   selectOffer:
     faceup: boolean
-  selectBeforeScoringCard:
-    card: CardName
-  pinkLarkspurAction:
-    cardToPick: CardName
-    cardToReplace: CardName
-  snapdragonAction:
-    cardsToSwitch: CardName[]
-  marigoldAction:
-    cardToDiscard: CardName
-  moveToScore:
   advanceRound:
 
 auth:
