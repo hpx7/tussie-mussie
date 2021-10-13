@@ -8,6 +8,7 @@ import {
   IDrawForOfferRequest,
   IJoinGameRequest,
   IMakeOfferRequest,
+  IPlayAgainRequest,
   ISelectOfferRequest,
   IStartGameRequest,
   Offer,
@@ -109,6 +110,9 @@ export class Impl implements Methods<InternalState> {
     return Response.ok();
   }
   advanceRound(state: InternalState, user: UserData, ctx: Context, request: IAdvanceRoundRequest): Response {
+    if (getGameStatus(state) !== GameStatus.ROUND_RECAP) {
+      return Response.error("Illegal operation");
+    }
     state.round++;
     state.deck = createDeck(ctx);
     const turnIdx = state.players.findIndex((p) => p.name === state.turn)!;
@@ -116,6 +120,19 @@ export class Impl implements Methods<InternalState> {
     state.players.forEach((p) => {
       p.drawnCards = [];
       p.hand = [];
+    });
+    return Response.ok();
+  }
+  playAgain(state: InternalState, user: UserData, ctx: Context, request: IPlayAgainRequest): Response {
+    if (getGameStatus(state) !== GameStatus.GAME_OVER || state.round < 2) {
+      return Response.error("Illegal operation");
+    }
+    state.round = 0;
+    state.deck = createDeck(ctx);
+    state.players.forEach((p) => {
+      p.score = 0;
+      p.hand = [];
+      p.drawnCards = [];
     });
     return Response.ok();
   }

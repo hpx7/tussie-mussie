@@ -48,6 +48,7 @@ methods:
   selectOffer:
     faceup: boolean
   advanceRound:
+  playAgain:
 
 auth:
   anonymous:

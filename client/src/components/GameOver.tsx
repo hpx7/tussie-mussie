@@ -40,6 +40,11 @@ class GameOver extends React.Component<IGameOverProps, IGameOverState> {
                 </>
               );
             })}
+        <div>
+          <button className="hive-btn" onClick={this.playAgain}>
+            Play Again
+          </button>
+        </div>
       </div>
     );
   }
@@ -47,6 +52,14 @@ class GameOver extends React.Component<IGameOverProps, IGameOverState> {
   private getDefaultState(props: IGameOverProps): IGameOverState {
     return {};
   }
+
+  private playAgain = () => {
+    this.props.client.playAgain({}).then((result) => {
+      if (result.type === "error") {
+        console.error(result.error);
+      }
+    });
+  };
 }
 
 export default GameOver;
