@@ -1,4 +1,4 @@
 export type CardAction = {
-    cardName?: string;
-    isFaceUp: boolean;
-}
+  cardName?: string;
+  isFaceUp: boolean;
+};
