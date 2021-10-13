@@ -160,16 +160,17 @@ export class Impl implements Methods<InternalState> {
     return Response.ok();
   }
   getUserState(state: InternalState, user: UserData): PlayerState {
+    const status = getGameStatus(state);
     return {
       round: state.round,
       turn: state.turn,
-      status: getGameStatus(state),
+      status,
       offer:
         state.offer !== undefined
           ? { faceupCard: state.offer.faceupCard, facedownCard: maskCard(state.offer.facedownCard) }
           : undefined,
       players: state.players.map((p) => {
-        if (p.name === user.name) {
+        if (p.name === user.name || status === GameStatus.ROUND_RECAP) {
           return p;
         }
         return {
