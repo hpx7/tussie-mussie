@@ -81,8 +81,8 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
   };
 
   private joinGame = () => {
-    const user = RtagClient.getUserFromToken(sessionStorage.getItem("user")!);
-    this.props.client.joinGame({ nickname: user.name }).then((result) => {
+    const nickname = RtagClient.getUserFromToken(sessionStorage.getItem("user")!).name; // TODO use user input
+    this.props.client.joinGame({ nickname }).then((result) => {
       if (result.type === "error") {
         console.error(result.error);
       }

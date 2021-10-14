@@ -86,9 +86,9 @@ async function initRtag(
         sessionStorage.setItem("user", JSON.stringify({ token: t }));
         return t;
       });
-  const user = RtagClient.getUserFromToken(token);
   if (path === "/game") {
-    const connection = await client.connectNew(token, { nickname: user.name }, onStateChange);
+    const nickname = RtagClient.getUserFromToken(token).name; // TODO use user input
+    const connection = await client.connectNew(token, { nickname }, onStateChange);
     setRtag(connection);
     history.replace(`/game/${connection.stateId}`);
   } else {
