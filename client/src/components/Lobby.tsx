@@ -1,6 +1,6 @@
 import { isEqual } from "lodash-es";
 import React from "react";
-import { RtagConnection } from "../../.rtag/client";
+import { RtagClient, RtagConnection } from "../../.rtag/client";
 import { PlayerInfo } from "../../.rtag/types";
 
 interface ILobbyProps {
@@ -81,7 +81,8 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
   };
 
   private joinGame = () => {
-    this.props.client.joinGame({}).then((result) => {
+    const user = RtagClient.getUserFromToken(sessionStorage.getItem("user")!);
+    this.props.client.joinGame({ nickname: user.name }).then((result) => {
       if (result.type === "error") {
         console.error(result.error);
       }

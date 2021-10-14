@@ -40,7 +40,9 @@ types:
 
 methods:
   createGame:
+    nickname: Username
   joinGame:
+    nickname: Username
   startGame:
   drawForOffer:
   makeOffer:

@@ -19,7 +19,9 @@ import {
 import { scoreForCard } from "./scoring";
 import { createDeck } from "./deck";
 
+type UserId = string;
 type InternalState = {
+  nicknames: Map<UserId, Username>;
   deck: Card[];
   round: number;
   turn: Username;
@@ -30,20 +32,22 @@ type InternalState = {
 export class Impl implements Methods<InternalState> {
   createGame(user: UserData, ctx: Context, request: ICreateGameRequest): InternalState {
     return {
+      nicknames: new Map([[user.id, request.nickname]]),
       deck: createDeck(ctx),
       round: -1,
-      turn: user.name,
-      players: [{ name: user.name, score: 0, hand: [], drawnCards: [] }],
+      turn: user.id,
+      players: [{ name: user.id, score: 0, hand: [], drawnCards: [] }],
     };
   }
   joinGame(state: InternalState, user: UserData, ctx: Context, request: IJoinGameRequest): Response {
-    if (state.players.find((p) => p.name === user.name) !== undefined) {
+    if (state.players.find((p) => p.name === user.id) !== undefined) {
       return Response.error("Already joined");
     }
     if (state.round >= 0) {
       return Response.error("Game has started");
     }
-    state.players.push({ name: user.name, score: 0, hand: [], drawnCards: [] });
+    state.nicknames.set(user.id, request.nickname);
+    state.players.push({ name: user.id, score: 0, hand: [], drawnCards: [] });
     return Response.ok();
   }
   startGame(state: InternalState, user: UserData, ctx: Context, request: IStartGameRequest): Response {
@@ -57,18 +61,18 @@ export class Impl implements Methods<InternalState> {
     if (state.round < 0) {
       return Response.error("Not started");
     }
-    if (state.turn !== user.name) {
+    if (state.turn !== user.id) {
       return Response.error("Not your turn");
     }
-    const player = state.players.find((p) => p.name === user.name)!;
+    const player = state.players.find((p) => p.name === user.id)!;
     player.drawnCards = [state.deck.pop()!, state.deck.pop()!];
     return Response.ok();
   }
   makeOffer(state: InternalState, user: UserData, ctx: Context, request: IMakeOfferRequest): Response {
-    if (state.turn !== user.name) {
+    if (state.turn !== user.id) {
       return Response.error("Not your turn");
     }
-    const player = state.players.find((p) => p.name === user.name)!;
+    const player = state.players.find((p) => p.name === user.id)!;
     if (player.drawnCards.find((card) => card.details!.name === request.faceupCard) === undefined) {
       return Response.error("Card not valid");
     }
@@ -84,10 +88,10 @@ export class Impl implements Methods<InternalState> {
     }
     const turnIdx = state.players.findIndex((p) => p.name === state.turn)!;
     const chooser = state.players[(turnIdx + 1) % state.players.length];
-    if (chooser.name !== user.name) {
+    if (chooser.name !== user.id) {
       return Response.error("Not your turn");
     }
-    const player = state.players.find((p) => p.name === user.name)!;
+    const player = state.players.find((p) => p.name === user.id)!;
     const offerer = state.players[turnIdx];
     if (request.faceup) {
       player.hand.push({ card: state.offer.faceupCard, isKeepsake: false });
@@ -140,18 +144,19 @@ export class Impl implements Methods<InternalState> {
     const status = getGameStatus(state);
     return {
       round: state.round,
-      turn: state.turn,
+      turn: state.nicknames.get(state.turn)!,
       status,
       offer:
         state.offer !== undefined
           ? { faceupCard: state.offer.faceupCard, facedownCard: maskCard(state.offer.facedownCard) }
           : undefined,
       players: state.players.map((p) => {
-        if (p.name === user.name || status === GameStatus.ROUND_RECAP) {
-          return p;
+        if (p.name === user.id || status === GameStatus.ROUND_RECAP) {
+          return { ...p, name: state.nicknames.get(p.name)! };
         }
         return {
           ...p,
+          name: state.nicknames.get(p.name)!,
           drawnCards: p.drawnCards.map((card) => maskCard(card)),
           hand: p.hand.map((card) => (card.isKeepsake ? { card: maskCard(card.card), isKeepsake: true } : card)),
         };

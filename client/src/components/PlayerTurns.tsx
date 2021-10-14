@@ -54,7 +54,7 @@ class PlayerTurns extends React.Component<IPlayerTurnsProps, IPlayerTurnsState> 
         {currentPlayerInfo && playerState.offer && (
           <>
             {chooser.name === currentPlayerInfo.name ? (
-              <p>Select the which card you want:</p>
+              <p>Select which card you want:</p>
             ) : (
               <p>{chooser.name} is deciding on an offer:</p>
             )}
