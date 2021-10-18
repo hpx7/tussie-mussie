@@ -33,12 +33,15 @@ function Game(props: IGameProps) {
   const token = sessionStorage.getItem("user");
   const currentPlayerName = token !== null ? RtagClient.getUserFromToken(token).name : "";
 
-  console.log(playerState)
+  console.log(playerState);
 
   if (playerState && rtag && !is404 && path !== "/game") {
     return (
       <div className={"tussie--game-container"}>
         <p>{currentPlayerName}</p>
+        <button className="hive-btn" onClick={() => history.push("/")} disabled={path === "/"}>
+          Home
+        </button>
         {playerState.status === GameStatus.LOBBY && <Lobby {...playerState} isCreator={true} client={rtag}></Lobby>}
         {playerState.status === GameStatus.PLAYER_TURNS && (
           <PlayerTurns
