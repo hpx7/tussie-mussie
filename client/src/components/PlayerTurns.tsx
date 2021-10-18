@@ -21,6 +21,21 @@ function PlayerTurns(props: IPlayerTurnsProps) {
 
   return (
     <div>
+      {playerState.round < 2 && <h3>Scores:</h3>}
+      {currentPlayerInfo &&
+        playerState &&
+        playerState.players
+          .sort((a, b) => b.score - a.score)
+          .map((p) => {
+            return (
+              <>
+                <h4 key={p.name}>
+                  <strong>{p.name}'s</strong>: {p.score}
+                </h4>
+              </>
+            );
+          })}
+
       {currentPlayerInfo &&
         playerState.turn !== currentPlayerInfo.name &&
         currentPlayerInfo.drawnCards.length === 0 &&
