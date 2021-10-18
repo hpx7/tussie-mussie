@@ -11,6 +11,7 @@ function CardComponent({
   isKeepsake,
   isSelected,
   isSmall,
+  toSelect,
 }: {
   val: Card;
   state: PlayerState;
@@ -19,6 +20,7 @@ function CardComponent({
   isKeepsake?: boolean;
   isSelected?: boolean;
   isSmall?: boolean;
+  toSelect?: boolean
 }) {
   let className = 'tussie--card';
   if (isSelected) {
@@ -29,6 +31,9 @@ function CardComponent({
   }
   if (isSmall) {
     className += ' tussie--card-small';
+  }
+  if (toSelect && !isSelected) {
+    className += ' tussie--card-to-select';
   }
 
 
@@ -45,9 +50,9 @@ function CardComponent({
   return val.details ? (
     <div style={{display:"flex", flexDirection:"column", alignItems: "center"}}>
       {isKeepsake &&
-      <h4 style={{margin:0, color: "#95778B"}}>
+      <h5 style={{margin:0, color: "#95778B"}}>
         KEEPSAKE
-      </h4>}
+      </h5>}
       <div
         onClick={handleClick}
         className={className}

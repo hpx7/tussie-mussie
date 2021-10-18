@@ -37,12 +37,14 @@ function Game(props: IGameProps) {
 
   if (playerState && rtag && !is404 && path !== "/game") {
     return (
+        <>
+        {playerState.status >= GameStatus.PLAYER_TURNS && <div className={"tussie--title-header"} style={{display: "flex", flexDirection: "column"}}>
+            <div style={{display: "flex", justifyContent: "center"}}>
+              <h3 style={{margin: 4}}>Tussie Mussie - Round {playerState.round + 1} of 3</h3>
+            </div>
+          </div>
+        }
       <div className={"tussie--game-container"}>
-        <p>{currentPlayerName}</p>
-        <button className="hive-btn" onClick={() => history.push("/")} disabled={path === "/"}>
-          Home
-        </button>
-        {playerState.status >= GameStatus.PLAYER_TURNS && <div>Round {playerState.round}</div>}
         {playerState.status === GameStatus.LOBBY && <Lobby {...playerState} isCreator={true} client={rtag}></Lobby>}
         {playerState.status === GameStatus.PLAYER_TURNS && (
           <PlayerTurns
@@ -76,7 +78,14 @@ function Game(props: IGameProps) {
             client={rtag}
           />
         )}
+
+        <div style={{marginTop: 32}}>
+          <button className="tussie--button-small" onClick={() => history.push("/")} disabled={path === "/"}>
+            Return Home
+          </button>
+        </div>
       </div>
+          </>
     );
   } else if (is404) {
     return (

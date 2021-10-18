@@ -36,6 +36,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
         setHasPinkLarkspur(null);
         setHasSnapdragonActive(null);
         setHasMarigoldActive(null);
+        setTotalBeforeScoring(0);
 
         currentPlayerInfo.hand.forEach(hc => {
             if (hc.card.details) {
@@ -57,7 +58,20 @@ function BeforeScoring (props: IBeforeScoringProps) {
 
     return (
         <div>
-            {playerState.round < 2 && <h2>Before Scoring Phase</h2>}
+            {currentPlayerInfo &&
+            playerState &&
+            <div className={"tussie--score-header"} style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <h2 style={{margin: 3}}>Before Scoring Phase</h2>
+                {playerState.players
+                    .sort((a, b) => b.score - a.score)
+                    .map((p) => {
+                        return (
+                            <p style={{margin: 4, fontWeight: 900}} key={p.name}>{p.name}: {p.score}</p>
+                        );
+                    })}
+            </div>
+            }
+
             {currentPlayerInfo && playerState && totalBeforeScoring === 0 &&
                 <h4>Other Players are resolving Before Scoring actions.</h4>
             }
@@ -73,6 +87,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
                         client={client}
                         clickHandler={pinkLarkspurClick}
                         isKeepsake={false}
+                        toSelect={true}
                     />}
                     {hasSnapdragonActive && <CardComponent
                         key={hasSnapdragonActive.id}
@@ -81,6 +96,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
                         client={client}
                         clickHandler={snapdragonClick}
                         isKeepsake={false}
+                        toSelect={true}
                     />}
                     {hasMarigoldActive && <CardComponent
                         key={hasMarigoldActive.id}
@@ -89,13 +105,14 @@ function BeforeScoring (props: IBeforeScoringProps) {
                         client={client}
                         clickHandler={marigoldClick}
                         isKeepsake={false}
+                        toSelect={true}
                     />}
                 </div>
             </>
             }
             {currentPlayerInfo && playerState && pinkLarkspurSelected && !playerState.beforeScoring.pinkLarkspurHasDrawn &&
                 <>
-                    <h4>PINK LARKSPUR</h4>
+                    <h2 style={{marginTop: 8, marginBottom: 0, textAlign: "center"}}>RESOLVE PINK LARKSPUR</h2>
                     <button onClick={pinkLarkspurDrawAction}>Draw Cards</button>
                     <br />
                     <button className={"tussie--button-small"} onClick={deselectBeforeScoringCard}>Go Back</button>
@@ -103,7 +120,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
             }
             {currentPlayerInfo && playerState && pinkLarkspurSelected && playerState.beforeScoring.pinkLarkspurHasDrawn &&
                 <>
-                    <h4>PINK LARKSPUR</h4>
+                    <h2 style={{marginTop: 8, marginBottom: 0, textAlign: "center"}}>RESOLVE PINK LARKSPUR</h2>
                     <h3>Select one card to add:</h3>
 
                     <div style={{display:"flex", overflowX:"auto"}}>
@@ -116,6 +133,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
                                 client={client}
                                 clickHandler={(s: CardAction) => setPinkLarkspurCardToAdd(s.cardName!)}
                                 isSelected={pinkLarkspurCardToAdd === card.details?.name}
+                                toSelect={true}
                             />
                         );
                     })}
@@ -133,6 +151,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
                                 clickHandler={(s: CardAction) => setPinkLarkspurCardToReplace(s.cardName!)}
                                 isKeepsake={hc.isKeepsake}
                                 isSelected={pinkLarkspurCardToReplace === hc.card.details?.name}
+                                toSelect={true}
                             />
                         );
                     })}
@@ -146,7 +165,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
             }
             {currentPlayerInfo && playerState && snapdragonSelected &&
             <>
-                <h4>SNAPDRAGON</h4>
+                <h2 style={{marginTop: 8, marginBottom: 0, textAlign: "center"}}>RESOLVE SNAPDRAGON</h2>
                 <h3>Select up to 2 cards to flip (bouquet to keepsake or keepsake to bouquet):</h3>
                 <button className={"tussie--button-small"} onClick={() => setSnapdragonZoom(!snapdragonZoom)}>{snapdragonZoom ? 'Unzoom' : 'Zoom'}</button>
 
@@ -162,6 +181,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
                             isKeepsake={hc.isKeepsake}
                             isSelected={snapdragonCardsToFlip.includes(hc.card.details!.name)}
                             isSmall={!snapdragonZoom}
+                            toSelect={true}
                         />
                     );
                 })}
@@ -175,7 +195,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
             }
             {currentPlayerInfo && playerState && marigoldSelected &&
             <>
-                <h4>MARIGOLD</h4>
+                <h2 style={{marginTop: 8, marginBottom: 0, textAlign: "center"}}>RESOLVE MARIGOLD</h2>
                 <h3>Discard one card from your arrangement:</h3>
                 <button className={"tussie--button-small"} onClick={() => setMarigoldZoom(!marigoldZoom)}>{marigoldZoom ? 'Unzoom' : 'Zoom'}</button>
 
@@ -196,6 +216,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
                             isKeepsake={hc.isKeepsake}
                             isSelected={marigoldCardToDiscard === hc.card.details?.name}
                             isSmall={!marigoldZoom}
+                            toSelect={hc.card.details!.name !== "MARIGOLD"}
                         />
                     );
                 })}

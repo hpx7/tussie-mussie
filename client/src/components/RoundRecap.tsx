@@ -18,21 +18,20 @@ function RoundRecap (props: IRoundRecapProps) {
 
     return (
       <div>
-        {playerState.round === 2 && <h2>{playerState.players.sort((a,b) => b.score - a.score)[0].name} wins!</h2>}
-        {playerState.round < 2 && <h3>Scores:</h3>}
-        {currentPlayerInfo &&
+          {currentPlayerInfo &&
           playerState &&
-          playerState.players
-            .sort((a, b) => b.score - a.score)
-            .map((p) => {
-              return (
-                <>
-                  <h4 key={p.name}>
-                    <strong>{p.name}'s</strong>: {p.score}
-                  </h4>
-                </>
-              );
-            })}
+          <div className={"tussie--score-header"} style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+              <h2 style={{margin: 3}}>Round {playerState.round + 1} Recap</h2>
+              {playerState.players
+                  .sort((a, b) => b.score - a.score)
+                  .map((p) => {
+                      return (
+                          <p style={{margin: 4, fontWeight: 900}} key={p.name}>{p.name}: {p.score}</p>
+                      );
+                  })}
+          </div>
+          }
+        {playerState.round === 2 && <h1 style={{textAlign: "center"}}>{playerState.players.sort((a,b) => b.score - a.score)[0].name} wins!</h1>}
 
         <h3>Your Arrangement:</h3>
         <button className={"tussie--button-small"} onClick={() => setZoom(currentPlayerInfo.name)}>{arrangementZoom === currentPlayerInfo.name ? 'Unzoom' : 'Zoom'}</button>
@@ -78,10 +77,14 @@ function RoundRecap (props: IRoundRecapProps) {
                 </>
               );
             })}
-        <div>
-          <button className="hive-btn" onClick={advanceRound}>
-            Advance Round
-          </button>
+        <div style={{marginTop: 16}}>
+            {playerState.round < 2 && <button onClick={advanceRound}>
+                Advance Round
+              </button>}
+
+            {playerState.round == 2 && <button className="hive-btn" onClick={playAgain}>
+                Play Again
+            </button>}
         </div>
       </div>
     );
@@ -102,6 +105,16 @@ function RoundRecap (props: IRoundRecapProps) {
       }
     });
   }
+
+
+
+    function playAgain() {
+      props.client.playAgain({}).then((result) => {
+        if (result.type === "error") {
+          console.error(result.error);
+        }
+      });
+    }
 }
 
 export default RoundRecap;

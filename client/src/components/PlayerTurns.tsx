@@ -21,20 +21,19 @@ function PlayerTurns(props: IPlayerTurnsProps) {
 
   return (
     <div>
-      {playerState.round < 2 && <h3>Scores:</h3>}
       {currentPlayerInfo &&
         playerState &&
-        playerState.players
-          .sort((a, b) => b.score - a.score)
-          .map((p) => {
-            return (
-              <>
-                <h4 key={p.name}>
-                  <strong>{p.name}'s</strong>: {p.score}
-                </h4>
-              </>
-            );
-          })}
+          <div className={"tussie--score-header"} style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+            <h2 style={{margin: 3, textAlign: "center"}}>{playerState.turn}'s Offer</h2>
+            {playerState.players
+            .sort((a, b) => b.score - a.score)
+            .map((p) => {
+              return (
+              <p style={{margin: 4, fontWeight: 900}} key={p.name}>{p.name}: {p.score}</p>
+              );
+            })}
+          </div>
+      }
 
       {currentPlayerInfo &&
         playerState.turn !== currentPlayerInfo.name &&
@@ -61,6 +60,7 @@ function PlayerTurns(props: IPlayerTurnsProps) {
                   state={playerState}
                   client={client}
                   clickHandler={playerState.turn === currentPlayerInfo.name ? makeOffer : (s: CardAction) => {}}
+                  toSelect={true}
                 />
               );
             })}
@@ -82,6 +82,7 @@ function PlayerTurns(props: IPlayerTurnsProps) {
               state={playerState}
               client={client}
               clickHandler={chooser.name === currentPlayerInfo.name ? selectOffer : (s: CardAction) => {}}
+              toSelect={chooser.name === currentPlayerInfo.name}
             />
             <CardComponent
               key={playerState.offer.facedownCard.id}
@@ -89,6 +90,7 @@ function PlayerTurns(props: IPlayerTurnsProps) {
               state={playerState}
               client={client}
               clickHandler={chooser.name === currentPlayerInfo.name ? selectOffer : (s: CardAction) => {}}
+              toSelect={chooser.name === currentPlayerInfo.name}
             />
           </div>
         </>
@@ -118,7 +120,10 @@ function PlayerTurns(props: IPlayerTurnsProps) {
           </div>
         </>
       )}
-      {currentPlayerInfo && currentPlayerInfo.hand.length === 0 && <div>Empty arrangement</div>}
+      {currentPlayerInfo && currentPlayerInfo.hand.length === 0 &&
+      <div className={"tussie--empty-card"}>
+        <h5>Empty arrangement</h5>
+      </div>}
 
       {currentPlayerInfo &&
         playerState &&
@@ -129,7 +134,9 @@ function PlayerTurns(props: IPlayerTurnsProps) {
               return (
                 <>
                   <h3 key={p.name}>{p.name}'s Arrangement:</h3>
-                  <div>Empty arrangement</div>
+                  <div className={"tussie--empty-card"}>
+                    <h5>Empty arrangement</h5>
+                  </div>
                 </>
               );
             }

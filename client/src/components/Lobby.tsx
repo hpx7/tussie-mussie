@@ -42,9 +42,9 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
           </button>
         )}
         <br />
-        Current players:
+        <h4 style={{margin: 2}}>Current players:</h4>
         {players.map((p, i) => (
-          <div key={i}>{p.name}</div>
+          <h5 style={{margin: 0, marginLeft: 4}} key={i}>{i+1}. {p.name}</h5>
         ))}
         {players.length === 0 &&
           (isCreator ? (

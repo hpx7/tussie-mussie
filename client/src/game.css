@@ -1,6 +1,7 @@
 
 body {
     background-color: #F3E8D7;
+    margin: 0;
 }
 
 h1, h2, h3, h4, h5 {
@@ -108,6 +109,24 @@ and (min-device-width: 800px) {
     }
 }
 
+.tussie--game-container {
+    padding: 8px;
+}
+
+.tussie--title-header {
+    background-color: #65505E;
+}
+
+.tussie--score-header {
+    background-color: #e5ccdc;
+    margin-top: -8px;
+    border-radius: 0 0 8px 8px;
+}
+
+.tussie--title-header h3, .tussie--title-header h4 {
+    color: #f8f1f6;
+}
+
 
 .tussie--card {
     border-radius: 6px;
@@ -117,6 +136,12 @@ and (min-device-width: 800px) {
     margin: 3px;
 
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.tussie--card-to-select {
+    border: 2px solid #ffffff;
+    margin: 6px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 2px 4px 0px, rgba(60, 64, 67, 0.15) 0px 2px 5px 2px;
 }
 .tussie--card-small {
     width: 20vw;
@@ -131,4 +156,22 @@ and (min-device-width: 800px) {
 
 .tussie--card-keepsake {
     /*filter: grayscale(20%);*/
+}
+
+.tussie--empty-card {
+    border-radius: 3px;
+    /*border: 1px solid #65505E;*/
+    margin: 3px;
+
+    width: 40vw;
+    max-width: 170px;
+    height: 10vw;
+    max-height: 255px;
+
+    background-color: #d9ced5;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
