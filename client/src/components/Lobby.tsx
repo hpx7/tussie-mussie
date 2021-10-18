@@ -25,7 +25,7 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
 
   render() {
     const { isCreator, players } = this.props;
-    const { edited } = this.state;
+    const user = RtagClient.getUserFromToken(sessionStorage.getItem("user")!);
 
     return (
       <div className="Lobby">
@@ -36,10 +36,16 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
             Copy
           </button>
         </span>
-        <button className="hive-btn hive-input-btn" onClick={this.joinGame}>
-          Join Game
-        </button>
+        {!players.find((p) => p.name === user.name) && (
+          <button className="hive-btn hive-input-btn" onClick={this.joinGame}>
+            Join Game
+          </button>
+        )}
         <br />
+        Current players:
+        {players.map((p, i) => (
+          <div key={i}>{p.name}</div>
+        ))}
         {players.length === 0 &&
           (isCreator ? (
             <h5>Waiting on another player to join and start the game</h5>
@@ -54,13 +60,6 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
           ) : (
             <h5>Waiting for host to start the game!</h5>
           ))}
-        <div className="GameSettings"></div>
-        <br />
-        {isCreator && edited && (
-          <button className="hive-btn" onClick={this.resetSettings}>
-            Reset
-          </button>
-        )}
         {isCreator && players.length > 1 && players.length <= 4 && (
           <button className="hive-btn" onClick={this.playGame} disabled={players.length === 0}>
             Play!
@@ -75,10 +74,6 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
       edited: false,
     };
   }
-
-  private resetSettings = () => {
-    this.setState(this.getDefaultState(this.props));
-  };
 
   private joinGame = () => {
     const nickname = RtagClient.getUserFromToken(sessionStorage.getItem("user")!).name; // TODO use user input
