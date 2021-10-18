@@ -147,7 +147,7 @@ function BeforeScoring (props: IBeforeScoringProps) {
             {currentPlayerInfo && playerState && snapdragonSelected &&
             <>
                 <h4>SNAPDRAGON</h4>
-                <h3>Select 2 cards to flip (bouquet to keepsake or keepsake to bouquet):</h3>
+                <h3>Select up to 2 cards to flip (bouquet to keepsake or keepsake to bouquet):</h3>
                 <button className={"tussie--button-small"} onClick={() => setSnapdragonZoom(!snapdragonZoom)}>{snapdragonZoom ? 'Unzoom' : 'Zoom'}</button>
 
                 <div style={{display:"flex", overflowX:"auto"}}>
