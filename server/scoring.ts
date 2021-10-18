@@ -94,5 +94,6 @@ export function scoreForCard(handCard: HandCard, hand: HandCard[]) {
     }
     score += colors.size + bonusPoints;
   }
+  console.log('Score for ', card.details!.name, ': ', score);
   return score;
 }

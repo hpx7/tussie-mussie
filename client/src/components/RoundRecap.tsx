@@ -1,5 +1,5 @@
 import { isEqual } from "lodash-es";
-import React from "react";
+import React, {useState} from "react";
 import { RtagConnection } from "../../.rtag/client";
 import { PlayerState, PlayerInfo } from "../../.rtag/types";
 import CardComponent from "./Card";
@@ -11,23 +11,15 @@ interface IRoundRecapProps {
   client: RtagConnection;
 }
 
-interface IRoundRecapState {}
+function RoundRecap (props: IRoundRecapProps) {
+    const { client, playerState, currentPlayerInfo } = props;
 
-class RoundRecap extends React.Component<IRoundRecapProps, IRoundRecapState> {
-  state = this.getDefaultState(this.props);
-
-  componentDidUpdate(oldProps: IRoundRecapProps) {
-    if (!isEqual(oldProps, this.props)) {
-      this.setState(this.getDefaultState(this.props));
-    }
-  }
-
-  render() {
-    const { client, playerState, currentPlayerInfo } = this.props;
+  const [arrangementZoom, setArrangementZoom] = useState('');
 
     return (
       <div>
-        {playerState.round < 2 && <p>Scores:</p>}
+        {playerState.round === 2 && <h2>{playerState.players.sort((a,b) => b.score - a.score)[0].name} wins!</h2>}
+        {playerState.round < 2 && <h3>Scores:</h3>}
         {currentPlayerInfo &&
           playerState &&
           playerState.players
@@ -35,14 +27,16 @@ class RoundRecap extends React.Component<IRoundRecapProps, IRoundRecapState> {
             .map((p) => {
               return (
                 <>
-                  <p key={p.name}>
-                    {p.name}'s: {p.score}
-                  </p>
+                  <h4 key={p.name}>
+                    <strong>{p.name}'s</strong>: {p.score}
+                  </h4>
                 </>
               );
             })}
 
-        <p>Your Arrangement:</p>
+        <h3>Your Arrangement:</h3>
+        <button className={"tussie--button-small"} onClick={() => setZoom(currentPlayerInfo.name)}>{arrangementZoom === currentPlayerInfo.name ? 'Unzoom' : 'Zoom'}</button>
+        <div style={{display:"flex", overflowX:"auto"}}>
         {currentPlayerInfo &&
           currentPlayerInfo.hand.map((hc) => {
             return (
@@ -52,9 +46,11 @@ class RoundRecap extends React.Component<IRoundRecapProps, IRoundRecapState> {
                 state={playerState}
                 client={client}
                 isKeepsake={hc.isKeepsake}
+                isSmall={currentPlayerInfo.name !== arrangementZoom}
               />
             );
           })}
+        </div>
 
         {currentPlayerInfo &&
           playerState &&
@@ -63,7 +59,9 @@ class RoundRecap extends React.Component<IRoundRecapProps, IRoundRecapState> {
             .map((p) => {
               return (
                 <>
-                  <p key={p.name}>{p.name}'s Arrangement:</p>
+                  <h3 key={p.name}>{p.name}'s Arrangement:</h3>
+                  <button className={"tussie--button-small"} onClick={() => setZoom(p.name)}>{arrangementZoom === p.name ? 'Unzoom' : 'Zoom'}</button>
+                  <div style={{display:"flex", overflowX:"auto"}}>
                   {p.hand.map((hc) => {
                     return (
                       <CardComponent
@@ -72,34 +70,38 @@ class RoundRecap extends React.Component<IRoundRecapProps, IRoundRecapState> {
                         state={playerState}
                         client={client}
                         isKeepsake={hc.isKeepsake}
+                        isSmall={p.name !== arrangementZoom}
                       />
                     );
                   })}
+                  </div>
                 </>
               );
             })}
         <div>
-          <button className="hive-btn" onClick={this.advanceRound}>
+          <button className="hive-btn" onClick={advanceRound}>
             Advance Round
           </button>
         </div>
       </div>
     );
+
+  function setZoom(playerName : string) {
+    if (arrangementZoom === playerName) {
+      setArrangementZoom('');
+    }
+    else {
+      setArrangementZoom(playerName);
+    }
   }
 
-  private getDefaultState(props: IRoundRecapProps): IRoundRecapState {
-    return {
-      edited: false,
-    };
-  }
-
-  private advanceRound = () => {
-    this.props.client.advanceRound({}).then((result) => {
+  function advanceRound() {
+    props.client.advanceRound({}).then((result) => {
       if (result.type === "error") {
         console.error(result.error);
       }
     });
-  };
+  }
 }
 
 export default RoundRecap;

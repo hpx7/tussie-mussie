@@ -10,6 +10,7 @@ types:
   GameStatus:
     - LOBBY
     - PLAYER_TURNS
+    - BEFORE_SCORING
     - ROUND_RECAP
     - GAME_OVER
   CardDetails:
@@ -28,14 +29,21 @@ types:
     score: number
     hand: HandCard[]
     drawnCards: Card[]
+    discardedCards: Card[]
   Offer:
     faceupCard: Card
     facedownCard: Card
+  BeforeScoringActions:
+    pinkLarkspurHasDrawn: boolean
+    pinkLarkspurResolved: boolean
+    snapdragonResolved: boolean
+    marigoldResolved: boolean
   PlayerState:
     round: number
     turn: Username
     status: GameStatus
     offer?: Offer
+    beforeScoring: BeforeScoringActions
     players: PlayerInfo[]
 
 methods:
@@ -49,6 +57,16 @@ methods:
     faceupCard: CardName
   selectOffer:
     faceup: boolean
+  selectBeforeScoringCard:
+    card: CardName
+  pinkLarkspurDrawAction:
+  pinkLarkspurAction:
+    cardToPick: CardName
+    cardToReplace: CardName
+  snapdragonAction:
+    cardsToSwitch: CardName[]
+  marigoldAction:
+    cardToDiscard: CardName
   advanceRound:
   playAgain:
 

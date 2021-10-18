@@ -5,8 +5,10 @@ import { RtagClient, RtagConnection } from "../.rtag/client";
 import { GameStatus, PlayerState } from "../.rtag/types";
 import Lobby from "./components/Lobby";
 import PlayerTurns from "./components/PlayerTurns";
+import BeforeScoring from "./components/BeforeScoring";
 import RoundRecap from "./components/RoundRecap";
 import GameOver from "./components/GameOver";
+import "./game.css";
 
 const client = new RtagClient(import.meta.env.VITE_APP_ID as string);
 
@@ -31,13 +33,23 @@ function Game(props: IGameProps) {
   const token = sessionStorage.getItem("user");
   const currentPlayerName = token !== null ? RtagClient.getUserFromToken(token).name : "";
 
+  console.log(playerState)
+
   if (playerState && rtag && !is404 && path !== "/game") {
     return (
-      <div>
+      <div className={"tussie--game-container"}>
         <p>{currentPlayerName}</p>
         {playerState.status === GameStatus.LOBBY && <Lobby {...playerState} isCreator={true} client={rtag}></Lobby>}
         {playerState.status === GameStatus.PLAYER_TURNS && (
           <PlayerTurns
+            isCreator={true}
+            playerState={playerState}
+            currentPlayerInfo={playerState.players.find((p) => p.name === currentPlayerName)!}
+            client={rtag}
+          />
+        )}
+        {playerState.status === GameStatus.BEFORE_SCORING && (
+          <BeforeScoring
             isCreator={true}
             playerState={playerState}
             currentPlayerInfo={playerState.players.find((p) => p.name === currentPlayerName)!}

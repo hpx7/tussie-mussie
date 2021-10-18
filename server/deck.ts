@@ -42,7 +42,7 @@ export function createDeck(ctx: Context) {
     createCard(ctx, {
       name: "ORCHID",
       color: Color.WHITE,
-      numHearts: 0,
+      numHearts: 1,
       ruleText: "This card counts as any of one color",
     }),
     createCard(ctx, {

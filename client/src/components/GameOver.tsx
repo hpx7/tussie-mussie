@@ -26,7 +26,7 @@ class GameOver extends React.Component<IGameOverProps, IGameOverState> {
 
     return (
       <div>
-        <strong>{playerState.players.sort((a, b) => b.score - a.score)[0].name} wins!</strong>
+        <h2>{playerState.players.sort((a, b) => b.score - a.score)[0].name} wins!</h2>
         {currentPlayerInfo &&
           playerState &&
           playerState.players
@@ -34,9 +34,9 @@ class GameOver extends React.Component<IGameOverProps, IGameOverState> {
             .map((p) => {
               return (
                 <>
-                  <p key={p.name}>
+                  <h4 key={p.name}>
                     {p.name}'s score: {p.score}
-                  </p>
+                  </h4>
                 </>
               );
             })}
