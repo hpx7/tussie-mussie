@@ -42,6 +42,7 @@ function Game(props: IGameProps) {
         <button className="hive-btn" onClick={() => history.push("/")} disabled={path === "/"}>
           Home
         </button>
+        {playerState.status >= GameStatus.PLAYER_TURNS && <div>Round {playerState.round}</div>}
         {playerState.status === GameStatus.LOBBY && <Lobby {...playerState} isCreator={true} client={rtag}></Lobby>}
         {playerState.status === GameStatus.PLAYER_TURNS && (
           <PlayerTurns
