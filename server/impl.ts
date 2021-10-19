@@ -276,7 +276,7 @@ export class Impl implements Methods<InternalState> {
     return Response.ok();
   }
   playAgain(state: InternalState, user: UserData, ctx: Context, request: IPlayAgainRequest): Response {
-    if (getGameStatus(state) !== GameStatus.GAME_OVER || state.round < 2) {
+    if (getGameStatus(state) < GameStatus.ROUND_RECAP || state.round < 2) {
       return Response.error("Illegal operation");
     }
     state.round = 0;
