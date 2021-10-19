@@ -35,13 +35,12 @@ function Game(props: IGameProps) {
   if (playerState && rtag && !is404 && path !== "/game") {
     return (
       <>
-        {playerState.status >= GameStatus.PLAYER_TURNS && (
-          <div className={"tussie--title-header"} style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <h3 style={{ margin: 4 }}>Tussie Mussie - Round {playerState.round + 1} of 3</h3>
-            </div>
+        <div className={"tussie--title-header"} style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {playerState.status >= GameStatus.PLAYER_TURNS && <h3 style={{ margin: 4 }}>Tussie Mussie - Round {playerState.round + 1} of 3</h3>}
+            {playerState.status < GameStatus.PLAYER_TURNS && <h3 style={{ margin: 4 }}>Tussie Mussie</h3>}
           </div>
-        )}
+        </div>
         <div className={"tussie--game-container"}>
           {playerState.status === GameStatus.LOBBY && (
             <Lobby playerState={playerState} isCreator={true} client={rtag}></Lobby>

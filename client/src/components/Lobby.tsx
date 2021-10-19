@@ -42,11 +42,13 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
           value={this.state.nickname}
           onChange={(e) => this.setState({ nickname: e.target.value })}
         />
-        {players.find((p) => p.name === playerState.nickname) === undefined && this.state.nickname && (
-          <button className="hive-btn hive-input-btn" onClick={() => this.joinGame(this.state.nickname)}>
-            Join Game
-          </button>
-        )}
+        <button onClick={() => {
+          if (players.find((p) => p.name === playerState.nickname) === undefined && this.state.nickname) {
+            this.joinGame(this.state.nickname)
+          }
+        }}>
+          Join Game
+        </button>
         <br />
         <h4 style={{ margin: 2 }}>Current players:</h4>
         {players.map((p, i) => (

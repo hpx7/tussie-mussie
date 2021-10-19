@@ -9,7 +9,7 @@ h1, h2, h3, h4, h5 {
     color: #65505E;
 }
 
-p {
+p, label {
     font-family: "Quicksand", 'Open Sans', sans-serif;
 }
 
@@ -33,14 +33,12 @@ input {
     text-shadow: none;
     text-underline-offset: 1px;
     transition: border .2s ease-in-out,box-shadow .2s ease-in-out;
-    user-select: none;
-    -webkit-user-select: none;
     touch-action: manipulation;
     white-space: nowrap;
     word-break: break-word;
 }
 
-button {
+button, a {
    align-items: center;
    background-color: #cd9dbc;
    background-position: 0 0;
@@ -103,13 +101,13 @@ button:focus {
 
 @media screen
 and (min-device-width: 800px) {
-    .tussie--game-container {
+    .tussie--game-container, .tussie--title-container {
         width: 760px;
         margin: 0 auto;
     }
 }
 
-.tussie--game-container {
+.tussie--game-container, .tussie--title-container {
     padding: 8px;
 }
 

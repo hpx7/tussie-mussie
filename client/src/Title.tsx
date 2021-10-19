@@ -4,13 +4,17 @@ import { Link } from "react-router-dom";
 function Title() {
   const [gameId, setGameId] = useState<string>("");
   return (
-    <div className="Title background">
-      <div className="inputs">
-        <Link to="/game">
-          <button id="newGameBtn" className="hive-btn">
+      <>
+          <div className={"tussie--title-header"} style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                  <h3 style={{ margin: 4 }}>Tussie Mussie</h3>
+              </div>
+          </div>
+    <div className="tussie--title-container">
+      <div className="inputs" style={{display: "flex", flexDirection: "column", alignItems: "center", padding: 8}}>
+        <span><Link to="/game" style={{display: "inline-block"}}>
             New Game
-          </button>
-        </Link>
+        </Link></span>
         <br />
         <label htmlFor="gameIdInput">Game code:</label>
         <input
@@ -20,13 +24,12 @@ function Title() {
           value={gameId}
           onChange={(e) => setGameId(e.target.value.toLowerCase())}
         />
-        <Link to={`/game/${gameId}`}>
-          <button id="joinGameBtn" className="hive-btn hive-input-btn">
+          <span><Link to={`/game/${gameId}`} style={{display: "inline-block"}}>
             Join Game
-          </button>
-        </Link>
+          </Link></span>
       </div>
     </div>
+          </>
   );
 }
 
