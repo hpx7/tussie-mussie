@@ -16,6 +16,7 @@ function PlayerTurns(props: IPlayerTurnsProps) {
   const { client, playerState, currentPlayerInfo } = props;
   const turnIdx = playerState.players.findIndex((p) => p.name === playerState.turn)!;
   const chooser = playerState.players[(turnIdx + 1) % playerState.players.length];
+  console.log("currentPlayerInfo", currentPlayerInfo)
 
   const [arrangementZoom, setArrangementZoom] = useState("");
 

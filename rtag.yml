@@ -45,10 +45,10 @@ types:
     offer?: Offer
     beforeScoring: BeforeScoringActions
     players: PlayerInfo[]
+    nickname: string
 
 methods:
   createGame:
-    nickname: Username
   joinGame:
     nickname: Username
   startGame:

@@ -30,7 +30,7 @@ type InternalState = {
   nicknames: Map<UserId, Username>;
   deck: Card[];
   round: number;
-  turn: Username;
+  turn?: Username;
   offer?: Offer;
   beforeScoring: BeforeScoringActions;
   players: PlayerInfo[];
@@ -39,17 +39,16 @@ type InternalState = {
 export class Impl implements Methods<InternalState> {
   createGame(user: UserData, ctx: Context, request: ICreateGameRequest): InternalState {
     return {
-      nicknames: new Map([[user.id, request.nickname]]),
+      nicknames: new Map(),
       deck: createDeck(ctx),
       round: -1,
-      turn: user.id,
       beforeScoring: {
         pinkLarkspurHasDrawn: false,
         pinkLarkspurResolved: false,
         snapdragonResolved: false,
         marigoldResolved: false,
       },
-      players: [{ name: user.id, score: 0, hand: [], drawnCards: [], discardedCards: [] }],
+      players: [],
     };
   }
   joinGame(state: InternalState, user: UserData, ctx: Context, request: IJoinGameRequest): Response {
@@ -67,6 +66,7 @@ export class Impl implements Methods<InternalState> {
     if (state.players.length < 2) {
       return Response.error("Not enough players");
     }
+    state.turn = state.players[0].name;
     state.round = 0;
     return Response.ok();
   }
@@ -299,7 +299,7 @@ export class Impl implements Methods<InternalState> {
     const status = getGameStatus(state);
     return {
       round: state.round,
-      turn: state.nicknames.get(state.turn)!,
+      turn: state.turn !== undefined ? state.nicknames.get(state.turn)! : "",
       status,
       offer:
         state.offer !== undefined
@@ -317,6 +317,7 @@ export class Impl implements Methods<InternalState> {
           hand: p.hand.map((card) => (card.isKeepsake ? { card: maskCard(card.card), isKeepsake: true } : card)),
         };
       }),
+      nickname: state.nicknames.get(user.id) ?? "",
     };
   }
 }

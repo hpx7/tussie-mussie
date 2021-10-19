@@ -1,31 +1,28 @@
-import { isEqual } from "lodash-es";
 import React from "react";
-import { RtagClient, RtagConnection } from "../../.rtag/client";
-import { PlayerInfo } from "../../.rtag/types";
+import { RtagConnection } from "../../.rtag/client";
+import { PlayerState } from "../../.rtag/types";
 
 interface ILobbyProps {
   isCreator: boolean;
-  players: PlayerInfo[];
+  playerState: PlayerState;
   client: RtagConnection;
 }
 
 interface ILobbyState {
-  edited: boolean;
+  nickname: string;
 }
 
 class Lobby extends React.Component<ILobbyProps, ILobbyState> {
-  state = this.getDefaultState(this.props);
   private url = document.baseURI;
 
-  componentDidUpdate(oldProps: ILobbyProps) {
-    if (!isEqual(oldProps, this.props)) {
-      this.setState(this.getDefaultState(this.props));
-    }
+  constructor(props: ILobbyProps) {
+    super(props);
+    this.state = this.getDefaultState(props);
   }
 
   render() {
-    const { isCreator, players } = this.props;
-    const user = RtagClient.getUserFromToken(sessionStorage.getItem("user")!);
+    const { isCreator, playerState } = this.props;
+    const players = playerState.players;
 
     return (
       <div className="Lobby">
@@ -36,22 +33,28 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
             Copy
           </button>
         </span>
-        {!players.find((p) => p.name === user.name) && (
-          <button className="hive-btn hive-input-btn" onClick={this.joinGame}>
+        <br />
+        <label htmlFor="nicknameInput">Nickname:</label>
+        <input
+          type="text"
+          id="nicknameInput"
+          className="hive-input-btn-input"
+          value={this.state.nickname}
+          onChange={(e) => this.setState({ nickname: e.target.value })}
+        />
+        {players.find((p) => p.name === playerState.nickname) === undefined && this.state.nickname && (
+          <button className="hive-btn hive-input-btn" onClick={() => this.joinGame(this.state.nickname)}>
             Join Game
           </button>
         )}
         <br />
-        <h4 style={{margin: 2}}>Current players:</h4>
+        <h4 style={{ margin: 2 }}>Current players:</h4>
         {players.map((p, i) => (
-          <h5 style={{margin: 0, marginLeft: 4}} key={i}>{i+1}. {p.name}</h5>
+          <h5 style={{ margin: 0, marginLeft: 4 }} key={i}>
+            {i + 1}. {p.name}
+          </h5>
         ))}
-        {players.length === 0 &&
-          (isCreator ? (
-            <h5>Waiting on another player to join and start the game</h5>
-          ) : (
-            <h5>Waiting on game creator to finish setting up the game</h5>
-          ))}
+        {players.length < 2 && <h5>Waiting on more players to join the game</h5>}
         {players.length > 1 &&
           (isCreator ? <h5>Press "Play!" to start the game</h5> : <h5>Waiting for host to start the game!</h5>)}
         {players.length > 4 &&
@@ -71,12 +74,11 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
 
   private getDefaultState(props: ILobbyProps): ILobbyState {
     return {
-      edited: false,
+      nickname: "",
     };
   }
 
-  private joinGame = () => {
-    const nickname = RtagClient.getUserFromToken(sessionStorage.getItem("user")!).name; // TODO use user input
+  private joinGame = (nickname: string) => {
     this.props.client.joinGame({ nickname }).then((result) => {
       if (result.type === "error") {
         console.error(result.error);

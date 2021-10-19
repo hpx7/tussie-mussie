@@ -12,6 +12,7 @@ function Title() {
           </button>
         </Link>
         <br />
+        <label htmlFor="gameIdInput">Game code:</label>
         <input
           type="text"
           id="gameIdInput"
