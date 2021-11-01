@@ -16,17 +16,17 @@ types:
   CardDetails:
     name: CardName
     color: Color
-    numHearts: number
+    numHearts: int
     ruleText: string
   Card:
-    id: number
-    details?: CardDetails
+    id: int
+    details: CardDetails?
   HandCard:
     card: Card
     isKeepsake: boolean
   PlayerInfo:
     name: Username
-    score: number
+    score: int
     hand: HandCard[]
     drawnCards: Card[]
     discardedCards: Card[]
@@ -39,10 +39,10 @@ types:
     snapdragonResolved: boolean
     marigoldResolved: boolean
   PlayerState:
-    round: number
+    round: int
     turn: Username
     status: GameStatus
-    offer?: Offer
+    offer: Offer?
     beforeScoring: BeforeScoringActions
     players: PlayerInfo[]
     nickname: string
