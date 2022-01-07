@@ -37,7 +37,9 @@ function Game(props: IGameProps) {
       <>
         <div className={"tussie--title-header"} style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            {playerState.status >= GameStatus.PLAYER_TURNS && <h3 style={{ margin: 4 }}>Tussie Mussie - Round {playerState.round + 1} of 3</h3>}
+            {playerState.status >= GameStatus.PLAYER_TURNS && (
+              <h3 style={{ margin: 4 }}>Tussie Mussie - Round {playerState.round + 1} of 3</h3>
+            )}
             {playerState.status < GameStatus.PLAYER_TURNS && <h3 style={{ margin: 4 }}>Tussie Mussie</h3>}
           </div>
         </div>
@@ -111,12 +113,12 @@ async function initRtag(
         return t;
       });
   if (path === "/game") {
-    const connection = await client.connectNew(token, {}, onStateChange);
+    const connection = await client.connectNew(token, {}, ({ state }) => onStateChange(state), console.error);
     setRtag(connection);
     history.replace(`/game/${connection.stateId}`);
   } else {
     const stateId = path.split("/").pop()!;
-    const connection = await client.connectExisting(token, stateId, onStateChange);
+    const connection = client.connectExisting(token, stateId, ({ state }) => onStateChange(state), console.error);
     setRtag(connection);
   }
 }

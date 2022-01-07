@@ -1,5 +1,5 @@
 types:
-  Username: string
+  Nickname: string
   CardName: string
   Color:
     - RED
@@ -25,7 +25,7 @@ types:
     card: Card
     isKeepsake: boolean
   PlayerInfo:
-    name: Username
+    name: Nickname
     score: int
     hand: HandCard[]
     drawnCards: Card[]
@@ -40,17 +40,17 @@ types:
     marigoldResolved: boolean
   PlayerState:
     round: int
-    turn: Username
+    turn: Nickname
     status: GameStatus
     offer: Offer?
     beforeScoring: BeforeScoringActions
     players: PlayerInfo[]
-    nickname: string
+    nickname: Nickname
 
 methods:
   createGame:
   joinGame:
-    nickname: Username
+    nickname: Nickname
   startGame:
   drawForOffer:
   makeOffer:
