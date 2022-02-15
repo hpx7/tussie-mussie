@@ -48,7 +48,6 @@ types:
     nickname: Nickname
 
 methods:
-  createGame:
   joinGame:
     nickname: Nickname
   startGame:
@@ -75,5 +74,4 @@ auth:
     separator: "-"
 
 userState: PlayerState
-initialize: createGame
 error: string

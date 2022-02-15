@@ -1,5 +1,5 @@
-import { Context } from "./.rtag/methods";
-import { Color, CardDetails, Card } from "./.rtag/types";
+import { Color, CardDetails, Card } from "../api/types";
+import { Context } from "./.hathora/methods";
 
 export function createDeck(ctx: Context) {
   const cards = [
@@ -108,18 +108,9 @@ export function createDeck(ctx: Context) {
       ruleText: "Before scoring, you must discord one of your other cards",
     }),
   ];
-  return shuffle(ctx.randInt, cards);
+  return ctx.chance.shuffle(cards);
 }
 
 function createCard(ctx: Context, details: CardDetails): Card {
-  return { id: ctx.randInt(), details };
-}
-
-function shuffle<T>(randInt: (limit: number) => number, items: T[]) {
-  const shuffled = [...items];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = randInt(i + 1);
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
+  return { id: ctx.chance.natural({ max: 1e9 }), details };
 }

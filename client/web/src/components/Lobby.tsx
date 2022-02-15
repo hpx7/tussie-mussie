@@ -1,11 +1,11 @@
 import React from "react";
-import { RtagConnection } from "../../.rtag/client";
-import { PlayerState } from "../../.rtag/types";
+import { PlayerState } from "../../../../api/types";
+import { HathoraConnection } from "../../../.hathora/client";
 
 interface ILobbyProps {
   isCreator: boolean;
   playerState: PlayerState;
-  client: RtagConnection;
+  client: HathoraConnection;
 }
 
 interface ILobbyState {
@@ -42,11 +42,13 @@ class Lobby extends React.Component<ILobbyProps, ILobbyState> {
           value={this.state.nickname}
           onChange={(e) => this.setState({ nickname: e.target.value })}
         />
-        <button onClick={() => {
-          if (players.find((p) => p.name === playerState.nickname) === undefined && this.state.nickname) {
-            this.joinGame(this.state.nickname)
-          }
-        }}>
+        <button
+          onClick={() => {
+            if (players.find((p) => p.name === playerState.nickname) === undefined && this.state.nickname) {
+              this.joinGame(this.state.nickname);
+            }
+          }}
+        >
           Join Game
         </button>
         <br />

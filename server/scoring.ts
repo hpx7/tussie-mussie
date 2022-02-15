@@ -1,4 +1,4 @@
-import { HandCard, Color } from "./.rtag/types";
+import { HandCard, Color } from "../api/types";
 
 export function scoreForCard(handCard: HandCard, hand: HandCard[]) {
   let score = 0;
@@ -94,6 +94,6 @@ export function scoreForCard(handCard: HandCard, hand: HandCard[]) {
     }
     score += colors.size + bonusPoints;
   }
-  console.log('Score for ', card.details!.name, ': ', score);
+  console.log("Score for ", card.details!.name, ": ", score);
   return score;
 }

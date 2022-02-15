@@ -1,7 +1,6 @@
-import { isEqual } from "lodash-es";
 import React, { useState } from "react";
-import { RtagConnection } from "../../.rtag/client";
-import { PlayerState, PlayerInfo } from "../../.rtag/types";
+import { PlayerState, PlayerInfo } from "../../../../api/types";
+import { HathoraConnection } from "../../../.hathora/client";
 import CardComponent from "./Card";
 import { CardAction } from "../types";
 
@@ -9,32 +8,36 @@ interface IPlayerTurnsProps {
   isCreator: boolean;
   currentPlayerInfo: PlayerInfo;
   playerState: PlayerState;
-  client: RtagConnection;
+  client: HathoraConnection;
 }
 
 function PlayerTurns(props: IPlayerTurnsProps) {
   const { client, playerState, currentPlayerInfo } = props;
   const turnIdx = playerState.players.findIndex((p) => p.name === playerState.turn)!;
   const chooser = playerState.players[(turnIdx + 1) % playerState.players.length];
-  console.log("currentPlayerInfo", currentPlayerInfo)
+  console.log("currentPlayerInfo", currentPlayerInfo);
 
   const [arrangementZoom, setArrangementZoom] = useState("");
 
   return (
     <div>
-      {currentPlayerInfo &&
-        playerState &&
-          <div className={"tussie--score-header"} style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-            <h2 style={{margin: 3, textAlign: "center"}}>{playerState.turn}'s Offer</h2>
-            {playerState.players
+      {currentPlayerInfo && playerState && (
+        <div
+          className={"tussie--score-header"}
+          style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+        >
+          <h2 style={{ margin: 3, textAlign: "center" }}>{playerState.turn}'s Offer</h2>
+          {playerState.players
             .sort((a, b) => b.score - a.score)
             .map((p) => {
               return (
-              <p style={{margin: 4, fontWeight: 900}} key={p.name}>{p.name}: {p.score}</p>
+                <p style={{ margin: 4, fontWeight: 900 }} key={p.name}>
+                  {p.name}: {p.score}
+                </p>
               );
             })}
-          </div>
-      }
+        </div>
+      )}
 
       {currentPlayerInfo &&
         playerState.turn !== currentPlayerInfo.name &&
@@ -121,10 +124,11 @@ function PlayerTurns(props: IPlayerTurnsProps) {
           </div>
         </>
       )}
-      {currentPlayerInfo && currentPlayerInfo.hand.length === 0 &&
-      <div className={"tussie--empty-card"}>
-        <h5>Empty arrangement</h5>
-      </div>}
+      {currentPlayerInfo && currentPlayerInfo.hand.length === 0 && (
+        <div className={"tussie--empty-card"}>
+          <h5>Empty arrangement</h5>
+        </div>
+      )}
 
       {currentPlayerInfo &&
         playerState &&

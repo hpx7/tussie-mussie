@@ -1,12 +1,10 @@
-import { Context, Methods } from "./.rtag/methods";
-import { Response } from "./.rtag/base";
+import { Response } from "../api/base";
 import {
   UserId,
   BeforeScoringActions,
   Card,
   GameStatus,
   IAdvanceRoundRequest,
-  ICreateGameRequest,
   IDrawForOfferRequest,
   IJoinGameRequest,
   IMakeOfferRequest,
@@ -22,7 +20,8 @@ import {
   HandCard,
   PlayerState,
   Nickname,
-} from "./.rtag/types";
+} from "../api/types";
+import { Context, Methods } from "./.hathora/methods";
 import { scoreForCard } from "./scoring";
 import { createDeck } from "./deck";
 
@@ -44,7 +43,7 @@ type InternalState = {
 };
 
 export class Impl implements Methods<InternalState> {
-  createGame(userId: UserId, ctx: Context, request: ICreateGameRequest): InternalState {
+  initialize(userId: UserId, ctx: Context): InternalState {
     return {
       nicknames: new Map(),
       deck: createDeck(ctx),

@@ -1,4 +1,7 @@
-.rtag
+.hathora
 node_modules
 dist
 .env
+/api
+/client/prototype-ui/*
+!/client/prototype-ui/plugins

@@ -1,13 +1,13 @@
 import { isEqual } from "lodash-es";
 import React from "react";
-import { RtagConnection } from "../../.rtag/client";
-import { PlayerState, PlayerInfo } from "../../.rtag/types";
+import { PlayerState, PlayerInfo } from "../../../../api/types";
+import { HathoraConnection } from "../../../.hathora/client";
 
 interface IGameOverProps {
   isCreator: boolean;
   currentPlayerInfo: PlayerInfo;
   playerState: PlayerState;
-  client: RtagConnection;
+  client: HathoraConnection;
 }
 
 interface IGameOverState {}

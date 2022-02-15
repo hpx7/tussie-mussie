@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { History } from "history";
-import { RtagClient, RtagConnection } from "../.rtag/client";
-import { GameStatus, PlayerState } from "../.rtag/types";
+import { GameStatus, PlayerState } from "../../../api/types";
+import { HathoraClient, HathoraConnection } from "../../.hathora/client";
 import Lobby from "./components/Lobby";
 import PlayerTurns from "./components/PlayerTurns";
 import BeforeScoring from "./components/BeforeScoring";
@@ -10,20 +10,20 @@ import RoundRecap from "./components/RoundRecap";
 import GameOver from "./components/GameOver";
 import "./game.css";
 
-const client = new RtagClient(import.meta.env.VITE_APP_ID as string);
+const client = new HathoraClient(import.meta.env.VITE_APP_ID as string);
 
 interface IGameProps {}
 
 function Game(props: IGameProps) {
   const [playerState, setPlayerState] = useState<PlayerState | undefined>(undefined);
-  const [rtag, setRtag] = useState<RtagConnection | undefined>(undefined);
+  const [hathora, setHathora] = useState<HathoraConnection | undefined>(undefined);
   const [is404, setIs404] = useState<boolean>(false);
   const path = useLocation().pathname;
   const history = useHistory();
 
   useEffect(() => {
-    if (rtag === undefined) {
-      initRtag(path, history, setRtag, setPlayerState).catch((e) => {
+    if (hathora === undefined) {
+      initRtag(path, history, setHathora, setPlayerState).catch((e) => {
         console.error("Error connecting", e);
         setIs404(true);
       });
@@ -32,7 +32,7 @@ function Game(props: IGameProps) {
 
   console.log(playerState);
 
-  if (playerState && rtag && !is404 && path !== "/game") {
+  if (playerState && hathora && !is404 && path !== "/game") {
     return (
       <>
         <div className={"tussie--title-header"} style={{ display: "flex", flexDirection: "column" }}>
@@ -45,14 +45,14 @@ function Game(props: IGameProps) {
         </div>
         <div className={"tussie--game-container"}>
           {playerState.status === GameStatus.LOBBY && (
-            <Lobby playerState={playerState} isCreator={true} client={rtag}></Lobby>
+            <Lobby playerState={playerState} isCreator={true} client={hathora}></Lobby>
           )}
           {playerState.status === GameStatus.PLAYER_TURNS && (
             <PlayerTurns
               isCreator={true}
               playerState={playerState}
               currentPlayerInfo={playerState.players.find((p) => p.name === playerState.nickname)!}
-              client={rtag}
+              client={hathora}
             />
           )}
           {playerState.status === GameStatus.BEFORE_SCORING && (
@@ -60,7 +60,7 @@ function Game(props: IGameProps) {
               isCreator={true}
               playerState={playerState}
               currentPlayerInfo={playerState.players.find((p) => p.name === playerState.nickname)!}
-              client={rtag}
+              client={hathora}
             />
           )}
           {playerState.status === GameStatus.ROUND_RECAP && (
@@ -68,7 +68,7 @@ function Game(props: IGameProps) {
               isCreator={true}
               playerState={playerState}
               currentPlayerInfo={playerState.players.find((p) => p.name === playerState.nickname)!}
-              client={rtag}
+              client={hathora}
             />
           )}
           {playerState.status === GameStatus.GAME_OVER && (
@@ -76,7 +76,7 @@ function Game(props: IGameProps) {
               isCreator={true}
               playerState={playerState}
               currentPlayerInfo={playerState.players.find((p) => p.name === playerState.nickname)!}
-              client={rtag}
+              client={hathora}
             />
           )}
 
@@ -102,7 +102,7 @@ function Game(props: IGameProps) {
 async function initRtag(
   path: string,
   history: History,
-  setRtag: (client: RtagConnection) => void,
+  setHathora: (client: HathoraConnection) => void,
   onStateChange: (state: PlayerState) => void
 ): Promise<void> {
   const storedUserData = sessionStorage.getItem("user");
@@ -113,13 +113,13 @@ async function initRtag(
         return t;
       });
   if (path === "/game") {
-    const connection = await client.connectNew(token, {}, ({ state }) => onStateChange(state), console.error);
-    setRtag(connection);
+    const connection = await client.connectNew(token, ({ state }) => onStateChange(state), console.error);
+    setHathora(connection);
     history.replace(`/game/${connection.stateId}`);
   } else {
     const stateId = path.split("/").pop()!;
     const connection = client.connectExisting(token, stateId, ({ state }) => onStateChange(state), console.error);
-    setRtag(connection);
+    setHathora(connection);
   }
 }
 
