@@ -4,6 +4,7 @@ import {
   BeforeScoringActions,
   Card,
   GameStatus,
+  IInitializeRequest,
   IAdvanceRoundRequest,
   IDrawForOfferRequest,
   IJoinGameRequest,
@@ -43,7 +44,7 @@ type InternalState = {
 };
 
 export class Impl implements Methods<InternalState> {
-  initialize(userId: UserId, ctx: Context): InternalState {
+  initialize(ctx: Context, request: IInitializeRequest): InternalState {
     return {
       nicknames: new Map(),
       deck: createDeck(ctx),

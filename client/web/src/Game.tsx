@@ -10,7 +10,7 @@ import RoundRecap from "./components/RoundRecap";
 import GameOver from "./components/GameOver";
 import "./game.css";
 
-const client = new HathoraClient(import.meta.env.VITE_APP_ID as string);
+const client = new HathoraClient();
 
 interface IGameProps {}
 
@@ -23,7 +23,7 @@ function Game(props: IGameProps) {
 
   useEffect(() => {
     if (hathora === undefined) {
-      initRtag(path, history, setHathora, setPlayerState).catch((e) => {
+      initConnection(path, history, setHathora, setPlayerState).catch((e) => {
         console.error("Error connecting", e);
         setIs404(true);
       });
@@ -99,7 +99,7 @@ function Game(props: IGameProps) {
   }
 }
 
-async function initRtag(
+async function initConnection(
   path: string,
   history: History,
   setHathora: (client: HathoraConnection) => void,
@@ -113,12 +113,11 @@ async function initRtag(
         return t;
       });
   if (path === "/game") {
-    const connection = await client.connectNew(token, ({ state }) => onStateChange(state), console.error);
-    setHathora(connection);
-    history.replace(`/game/${connection.stateId}`);
+    const stateId = await client.create(token, {});
+    history.replace(`/game/${stateId}`);
   } else {
     const stateId = path.split("/").pop()!;
-    const connection = client.connectExisting(token, stateId, ({ state }) => onStateChange(state), console.error);
+    const connection = client.connect(token, stateId, ({ state }) => onStateChange(state), console.error);
     setHathora(connection);
   }
 }
